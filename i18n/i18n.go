@@ -56,9 +56,9 @@
 package i18n
 
 import (
-	"github.com/nicksnyder/go-i18n/i18n/bundle"
-	"github.com/nicksnyder/go-i18n/i18n/language"
-	"github.com/nicksnyder/go-i18n/i18n/translation"
+	"github.com/FinalLevel/go-i18n/i18n/bundle"
+	"github.com/FinalLevel/go-i18n/i18n/language"
+	"github.com/FinalLevel/go-i18n/i18n/translation"
 )
 
 // TranslateFunc returns the translation of the string identified by translationID.
@@ -122,7 +122,7 @@ func MustTfunc(languageSource string, languageSources ...string) TranslateFunc {
 // has a non-zero number of translations.
 //
 // It can parse languages from Accept-Language headers (RFC 2616).
-func Tfunc(languageSource string, languageSources ...string) (TranslateFunc, error) {
-	tf, err := defaultBundle.Tfunc(languageSource, languageSources...)
-	return TranslateFunc(tf), err
+func Tfunc(languageSource string, languageSources ...string) (TranslateFunc, error, string) {
+	tf, err, lang := defaultBundle.Tfunc(languageSource, languageSources...)
+	return TranslateFunc(tf), err, lang
 }

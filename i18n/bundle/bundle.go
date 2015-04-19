@@ -9,8 +9,8 @@ import (
 
 	"path/filepath"
 
-	"github.com/nicksnyder/go-i18n/i18n/language"
-	"github.com/nicksnyder/go-i18n/i18n/translation"
+	"github.com/FinalLevel/go-i18n/i18n/language"
+	"github.com/FinalLevel/go-i18n/i18n/translation"
 )
 
 // TranslateFunc is a copy of i18n.TranslateFunc to avoid a circular dependency.
@@ -125,7 +125,7 @@ func (b *Bundle) Translations() map[string]map[string]translation.Translation {
 
 // MustTfunc is similar to Tfunc except it panics if an error happens.
 func (b *Bundle) MustTfunc(languageSource string, languageSources ...string) TranslateFunc {
-	tf, err := b.Tfunc(languageSource, languageSources...)
+	tf, err, _ := b.Tfunc(languageSource, languageSources...)
 	if err != nil {
 		panic(err)
 	}
@@ -136,7 +136,7 @@ func (b *Bundle) MustTfunc(languageSource string, languageSources ...string) Tra
 // has a non-zero number of translations in the bundle.
 //
 // It can parse languages from Accept-Language headers (RFC 2616).
-func (b *Bundle) Tfunc(src string, srcs ...string) (TranslateFunc, error) {
+func (b *Bundle) Tfunc(src string, srcs ...string) (TranslateFunc, error, string) {
 	lang := b.translatedLanguage(src)
 	if lang == nil {
 		for _, src := range srcs {
@@ -152,7 +152,7 @@ func (b *Bundle) Tfunc(src string, srcs ...string) (TranslateFunc, error) {
 	}
 	return func(translationID string, args ...interface{}) string {
 		return b.translate(lang, translationID, args...)
-	}, err
+	}, err, lang.Tag
 }
 
 func (b *Bundle) translatedLanguage(src string) *language.Language {
